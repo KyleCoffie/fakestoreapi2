@@ -1,0 +1,110 @@
+.star-rating {
+  display: inline-block;
+}
+
+.star {
+  position: relative;
+  display: inline-block;
+  font-size: 1.5em;
+  color: #d3d3d3;
+}
+
+.star.full {
+  color: #ffc107;
+}
+
+.products-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+}
+
+.product-card {
+  width: 300px;
+  margin: 10px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  text-align: center;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  background-color: rgba(241, 226, 207, 0.825);
+  border-radius: 15px ;
+}
+
+.product-image {
+  max-width: 100%;
+  height: auto;
+  border-radius: 10px;
+}
+
+.star.partial::after {
+  content: '\2605';
+  position: absolute;
+  left: 0;
+  width: 50%;
+  overflow: hidden;
+  color: #ffc107;
+}
+
+.category-select {
+  font-size: 1.2em;
+  padding: 0.6em;
+  background-color: rgba(225, 191, 146, 0.659);
+  border: none;
+  border-radius: 5px;
+  margin: 10px 0;
+  cursor: pointer;
+}
+.cart-list {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.add-to-cart-button {
+  background-color: #3f8f41; /* Green */
+  border: none;
+  color: white;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+.add-to-cart-button:hover {
+  background-color: #4caf4f80;
+}
+.remove-item-button {
+  background-color: #c33f35; /* Red */
+  border: none;
+  color: white;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+.remove-item-button:hover {
+  background-color:#c33f35a3;
+}
+.checkout-button {
+  background-color: #3f8f41; 
+  border: none;
+  color: white;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+.checkout-button:hover {
+  background-color: #4caf4f80;
+}
