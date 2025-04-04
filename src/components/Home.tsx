@@ -8,6 +8,7 @@ import { auth } from '../firebasConfig'; // Import the auth object from firebase
 import { useAuthState } from 'react-firebase-hooks/auth'; // Import the useAuthState hook
 import { Link } from 'react-router-dom'; // Import the Link component for navigation
 import ShoppingCart from './ShoppingCart'; // Import the ShoppingCart component
+import Logout from './Logout'; // Import the Logout component
 import { db } from '../firebasConfig'; // Import the Firestore database
 import { collection, addDoc, getDocs, doc, deleteDoc, query, where } from 'firebase/firestore'; // Import Firestore functions
 
@@ -39,24 +40,45 @@ const populateFirestore = async () => {
   }
 };
 
-// Function to fetch products from Firestore
+// Function to fetch products from Firestore or Fake Store API
 const fetchProducts = async (): Promise<Product[]> => {
-  const productsCollection = collection(db, 'products');
-  const snapshot = await getDocs(productsCollection);
-  return snapshot.docs.map(doc => {
-    const data = doc.data();
-    return {
-      docId: doc.id,
-      id: data.id,
-      title: data.title,
-      price: data.price,
-      description: data.description,
-      category: data.category,
-      image: data.image,
-      stock: data.stock,
-      rating: data.rating || { rate: 0, count: 0 },
-    };
-  });
+  const productsCollection = collection(db, 'products'); // Get the products collection from Firestore
+  const snapshot = await getDocs(productsCollection); // Get all documents in the products collection
+
+  // Check if Firestore is empty
+  if (!snapshot.empty) {
+    // If Firestore is not empty, fetch products from Firestore
+    return snapshot.docs.map(doc => {
+      const data = doc.data();
+      return {
+        docId: doc.id,
+        id: data.id,
+        title: data.title,
+        price: data.price,
+        description: data.description,
+        category: data.category,
+        image: data.image,
+        stock: data.stock,
+        rating: data.rating || { rate: 0, count: 0 },
+      };
+    });
+  } else {
+    // If Firestore is empty, fetch from Fake Store API
+    const response = await fetch('https://fakestoreapi.com/products'); // Fetch products from the Fake Store API
+    const products = await response.json(); // Parse the response as JSON
+    // Map the API products to the same format as Firestore products
+    return products.map((product: any) => ({
+      docId: product.id.toString(), // Use API product ID as docId
+      id: product.id,
+      title: product.title,
+      price: product.price,
+      description: product.description,
+      category: product.category,
+      image: product.image,
+      stock: 100, // Default stock
+      rating: product.rating || { rate: 0, count: 0 },
+    }));
+  }
 };
 
 // Function to fetch all categories from the Fake Store API
@@ -206,6 +228,7 @@ const Home = () => {
             <Link to="/profile">
               <button>View Profile</button>
             </Link>
+            <Logout />
           </div>
           <Link to="/add-product">
             <button>Create New Product</button>

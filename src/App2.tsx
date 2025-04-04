@@ -6,6 +6,7 @@ import Home from './components/Home';
 import ShoppingCart from './components/ShoppingCart';
 import UserProfile from './components/UserProfile';
 import Login from './components/Login';
+import Logout from './components/Logout';
 import Register from './components/Register';
 import AddProductForm from './components/AddProductForm'; // Import AddProductForm
 import EditProductForm from './components/EditProductForm'; // Import EditProductForm
@@ -39,8 +40,8 @@ const App: React.FC = () => {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/profile" element={<UserProfile />} />
-            <Route path="/add-product" element={<AddProductForm />} /> {/* Add route for AddProductForm */}
-            <Route path="/edit-product/:productId" element={<EditProductForm />} /> {/* Add route for EditProductForm */}
+            <Route path="/add-product" element={user ? <AddProductForm /> : <Navigate to="/login" />} /> {/* Add route for AddProductForm */}
+            <Route path="/edit-product/:productId" element={user ? <EditProductForm /> : <Navigate to="/login" />} /> {/* Add route for EditProductForm */}
             <Route path="/orders" element={<OrderHistory />} /> {/* Add route for OrderHistory */}
             <Route path="/order/:orderId" element={<OrderDetails />} /> {/* Add route for OrderDetails */}
             <Route path="/login" element={<Navigate to="/" />} /> {/* Prevent logged-in users from accessing login */}
@@ -51,6 +52,7 @@ const App: React.FC = () => {
         <>
           <Routes>
             <Route path="/login" element={<Login />} />
+            <Route path="/logout" element={<Logout />} />
             <Route path="/register" element={<Register />} />
             <Route path="/" element={<Navigate to="/login" />} /> {/* Redirect to login if not authenticated */}
             <Route path="/profile" element={<Navigate to="/login" />} /> {/* Redirect to login if not authenticated */}
