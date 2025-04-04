@@ -22,7 +22,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '18' # Use a Node.js version compatible with your React app
+          node-version: '20' # Use a Node.js version compatible with your React app
 
       # Step 3: Install dependencies
       - name: Install dependencies
@@ -30,7 +30,9 @@ jobs:
 
       # Step 4: Run tests
       - name: Run tests
-        run: npm test -- --watchAll=false
+        run: npm test --ci
+
+      # Step
 
 #         This YAML code defines a GitHub Actions workflow called "CI Pipeline"
 
