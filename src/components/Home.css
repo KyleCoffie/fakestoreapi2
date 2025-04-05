@@ -120,7 +120,7 @@
 
 .home-container {
   text-align: center;
-  margin-left: 46%;
+  width: 100vw;
 }
 .shopping-cart-container{
   display: flex;
