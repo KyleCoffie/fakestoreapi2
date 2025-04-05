@@ -52,7 +52,7 @@ const ShoppingCart = () => {
   }, [checkout]);
 
   return (
-    <div>
+    <div className='shopping-cart-container'>
       {/* Heading for the shopping cart */}
       <h1>Shopping Cart</h1>
       {/* Display a thank you message if the user has checked out */}

@@ -17,8 +17,9 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  width: 80vw;
-  margin:0 -110px;
+  width: 90vw;
+  margin-left: 75px;
+  
 }
 
 .product-card {
@@ -60,7 +61,9 @@
 .cart-list {
   list-style-type: none;
   padding: 0;
-  margin: 0;
+  display:flex;
+  flex-direction: column;
+  width: 100vw;
 }
 
 .add-to-cart-button {
@@ -112,5 +115,21 @@
   background-color: #4caf4f80;
 }
 .quantity-button {
+  background-color: rgba(213, 199, 181, 0.564);
+}
+
+.home-container {
+  text-align: center;
+  margin-left: 46%;
+}
+.shopping-cart-container{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 25px;
+  margin: 20px auto;
   background-color: rgba(241, 226, 207, 0.825);
+  border-radius: 15px;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  width: 100vw;
 }

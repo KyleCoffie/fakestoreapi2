@@ -16,9 +16,7 @@ const EditProductForm = () => {
   const [description, setDescription] = useState('');
   const [category, setCategory] = useState('');
   const [image, setImage] = useState('');
-  const [stock, setStock] = useState('');
   const [ratingRate, setRatingRate] = useState('');
-  const [ratingCount, setRatingCount] = useState('');
 
   // Hook to navigate programmatically
   const navigate = useNavigate();
@@ -45,9 +43,7 @@ const EditProductForm = () => {
           setDescription(productData.description);
           setCategory(productData.category);
           setImage(productData.image);
-          setStock(productData.stock.toString());
           setRatingRate(productData.rating.rate.toString());
-          setRatingCount(productData.rating.count.toString());
         } else {
           alert('Product not found!');
           navigate('/');
@@ -81,8 +77,7 @@ const EditProductForm = () => {
         description,
         category,
         image,
-        stock: parseInt(stock),
-        rating: { rate: parseFloat(ratingRate), count: parseInt(ratingCount) }
+        rating: { rate: parseFloat(ratingRate)}
       });
 
       alert('Product updated successfully!');
@@ -118,16 +113,8 @@ const EditProductForm = () => {
           <input type="text" value={image} onChange={(e) => setImage(e.target.value)} required />
         </label>
         <label>
-          Stock:
-          <input type="number" value={stock} onChange={(e) => setStock(e.target.value)} required />
-        </label>
-        <label>
           Rating Rate:
           <input type="number" value={ratingRate} onChange={(e) => setRatingRate(e.target.value)} required />
-        </label>
-        <label>
-          Rating Count:
-          <input type="number" value={ratingCount} onChange={(e) => setRatingCount(e.target.value)} required />
         </label>
         {/* Button to submit the form and update the product */}
         <button type="submit">Update Product</button>

@@ -20,7 +20,6 @@ interface Product {
   description: string;
   category: string;
   image: string;
-  stock: number;
   rating: { rate: number; count: number };
 }
 
@@ -32,7 +31,7 @@ const populateFirestore = async () => {
 
   if (existingProducts.empty) {
     products.forEach(async (product: any) => {
-      await addDoc(productsCollection, { ...product, stock: 100 });
+      await addDoc(productsCollection, { ...product });
     });
     alert('Firestore populated!');
   } else {
@@ -59,7 +58,6 @@ const fetchProducts = async (user: any): Promise<Product[]> => {
         description: description,
         category: category,
         image: image,
-        stock: 100, // Default stock
         rating: rating || { rate: 0, count: 0 },
       };
     });
@@ -77,7 +75,6 @@ const fetchProducts = async (user: any): Promise<Product[]> => {
         description: data.description,
         category: data.category,
         image: data.image,
-        stock: data.stock,
         rating: data.rating || { rate: 0, count: 0 },
       };
     });
@@ -94,7 +91,6 @@ const fetchProducts = async (user: any): Promise<Product[]> => {
         description: description,
         category: category,
         image: image,
-        stock: 100, // Default stock
         rating: rating || { rate: 0, count: 0 },
       };
     });
@@ -128,7 +124,6 @@ const fetchProductsByCategory = async (category: string): Promise<Product[]> => 
       description: data.description,
       category: data.category,
       image: data.image,
-      stock: data.stock,
       rating: data.rating || { rate: 0, count: 0 },
     };
   });
@@ -166,51 +161,53 @@ const Home = () => {
 
   return (
     <div>
-      <h1>Products</h1>
-      <select className="category-select" value={selectedCategory} onChange={(e) => setSelectedCategory(e.target.value)}>
-        <option value="">All Categories</option>
-        {categories?.map((category) => (
-          <option key={category} value={category}>{category}</option>
-        ))}
-      </select>
-      <div className="products-container">
-        {productsToDisplay?.map((product) => {
-          const { docId, id, image, title, price, stock, description, rating } = product;
-          return (
-            <div key={docId} className="product-card">
-              <img src={image} alt={title} className="product-image" />
-              <h3>{title}</h3>
-              <p style={{ fontWeight: 'bold', fontStyle: 'italic' }}>Price: ${price?.toFixed(2)}</p>
-              <p>Stock: {stock}</p>
-              <p>{description}</p>
-              <StarRatings
-                rating={rating?.rate}
-                starRatedColor="black"
-                numberOfStars={5}
-                starEmptyColor='white'
-                starDimension='20px'
-                name='rating'
-              />
-              <button
-                className='add-to-cart-button'
-                onClick={() => dispatch(addItem({
-                  id,
-                  title,
-                  price,
-                  image,
-                  quantity: 1,
-                }))}>Add to Cart</button>
-              {user && (
-                <>
-                  <Link to={`/edit-product/${docId}`}>
-                    <button>Edit</button>
-                  </Link>
-                  <button onClick={() => handleDelete(docId)}>Delete</button>
-                </>
-              )}
-            </div>
-          );
-        })}
+
+      <div className="home-container">
+        <h1>Products</h1>
+        <select className="category-select" value={selectedCategory} onChange={(e) => setSelectedCategory(e.target.value)}>
+          <option value="">All Categories</option>
+          {categories?.map((category) => (
+            <option key={category} value={category}>{category}</option>
+          ))}
+        </select>
+      </div>
+        <div className="products-container">
+          {productsToDisplay?.map((product) => {
+            const { docId, id, image, title, price, description, rating } = product;
+            return (
+              <div key={docId} className="product-card">
+                <img src={image} alt={title} className="product-image" />
+                <h3>{title}</h3>
+                <p style={{ fontWeight: 'bold', fontStyle: 'italic' }}>Price: ${price?.toFixed(2)}</p>
+                <p>{description}</p>
+                <StarRatings
+                  rating={rating?.rate}
+                  starRatedColor="black"
+                  numberOfStars={5}
+                  starEmptyColor='white'
+                  starDimension='20px'
+                  name='rating'
+                />
+                <button
+                  className='add-to-cart-button'
+                  onClick={() => dispatch(addItem({
+                    id,
+                    title,
+                    price,
+                    image,
+                    quantity: 1,
+                  }))}>Add to Cart</button>
+                {user && (
+                  <>
+                    <Link to={`/edit-product/${docId}`}>
+                      <button>Edit</button>
+                    </Link>
+                    <button onClick={() => handleDelete(docId)}>Delete</button>
+                  </>
+                )}
+              </div>
+            );
+          })}
       </div>
       {user && (
         <>
