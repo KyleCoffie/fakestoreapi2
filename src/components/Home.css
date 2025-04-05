@@ -16,11 +16,13 @@
 .products-container {
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-around;
+  justify-content: center;
+  width: 80vw;
+  margin:0 -110px;
 }
 
 .product-card {
-  width: 300px;
+  width: 350px;
   margin: 10px;
   padding: 10px;
   border: 1px solid #ccc;
@@ -28,10 +30,11 @@
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
   background-color: rgba(241, 226, 207, 0.825);
   border-radius: 15px ;
+  height: auto;
 }
 
 .product-image {
-  max-width: 100%;
+  max-width: 70%;
   height: auto;
   border-radius: 10px;
 }
@@ -107,4 +110,7 @@
 }
 .checkout-button:hover {
   background-color: #4caf4f80;
+}
+.quantity-button {
+  background-color: rgba(241, 226, 207, 0.825);
 }

@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { auth } from '../firebasConfig';
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { Link } from 'react-router-dom';
+import './Login.css'; // Import stylesheet for styling the login form
 
 // Define the Login component
 const Login: React.FC = () => {
@@ -28,7 +29,7 @@ const Login: React.FC = () => {
   };
 
   return (
-    <div>
+    <div className='login-container'>
       <h2>Login</h2>
       {/* Display error message if there's an issue during login */}
       {error && <p style={{ color: 'red' }}>{error}</p>}

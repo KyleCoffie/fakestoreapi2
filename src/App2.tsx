@@ -12,10 +12,12 @@ import AddProductForm from './components/AddProductForm'; // Import AddProductFo
 import EditProductForm from './components/EditProductForm'; // Import EditProductForm
 import OrderHistory from './components/OrderHistory'; // Import OrderHistory
 import OrderDetails from './components/OrderDetails'; // Import OrderDetails
+import Navbar from './components/Navbar'; // Import Navbar component
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { auth } from './firebasConfig';
+import './App.css';
 
 
 // Create a new QueryClient instance for managing data fetching and caching
@@ -35,6 +37,7 @@ const App: React.FC = () => {
 
   return (
     <>
+      <Navbar />
       {user ? (
         <>
           <Routes>
@@ -54,12 +57,12 @@ const App: React.FC = () => {
             <Route path="/login" element={<Login />} />
             <Route path="/logout" element={<Logout />} />
             <Route path="/register" element={<Register />} />
-            <Route path="/" element={<Navigate to="/login" />} /> {/* Redirect to login if not authenticated */}
-            <Route path="/profile" element={<Navigate to="/login" />} /> {/* Redirect to login if not authenticated */}
-            <Route path="/add-product" element={<Navigate to="/login" />} /> {/* Redirect to login if not authenticated */}
-            <Route path="/edit-product/:productId" element={<Navigate to="/login" />} /> {/* Redirect to login if not authenticated */}
-            <Route path="/orders" element={<Navigate to="/login" />} /> {/* Redirect to login if not authenticated */}
-             <Route path="/order/:orderId" element={<Navigate to="/login" />} /> {/* Redirect to login if not authenticated */}
+            <Route path="/" element={<Home />} /> {/* Render Home component by default */}
+            <Route path="/profile" element={user ? <UserProfile /> : <Navigate to="/login" />} /> {/* Redirect to login if not authenticated */}
+            <Route path="/add-product" element={user ? <AddProductForm /> : <Navigate to="/login" />} /> {/* Add route for AddProductForm */}
+            <Route path="/edit-product/:productId" element={user ? <EditProductForm /> : <Navigate to="/login" />} /> {/* Redirect to login if not authenticated */}
+            <Route path="/orders" element={user ? <OrderHistory /> : <Navigate to="/login" />} /> {/* Redirect to login if not authenticated */}
+            <Route path="/order/:orderId" element={user ? <OrderDetails /> : <Navigate to="/login" />} /> {/* Redirect to login if not authenticated */}
           </Routes>
         </>
       )}

@@ -12,8 +12,21 @@ interface CartState {
   items: CartItem[];
 }
 
+const CART_STORAGE_KEY = 'cartItems';
+
+// Function to load cart items from local storage
+const loadCartItems = (): CartItem[] => {
+  try {
+    const serializedItems = localStorage.getItem(CART_STORAGE_KEY);
+    return serializedItems ? JSON.parse(serializedItems) : [];
+  } catch (error) {
+    console.error("Error loading cart items from local storage:", error);
+    return [];
+  }
+};
+
 const initialState: CartState = {
-  items: [],
+  items: loadCartItems(), // Load cart items from local storage on initialization
 };
 
 const cartSlice = createSlice({
@@ -29,10 +42,12 @@ const cartSlice = createSlice({
       } else {
         state.items.push({ ...newItem, quantity: 1 });
       }
+      localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(state.items)); // Save cart items to local storage
     },
     removeItem: (state, action: PayloadAction<number>) => {
       const id = action.payload;
       state.items = state.items.filter((item) => item.id !== id);
+      localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(state.items)); // Save cart items to local storage
     },
     updateItemQuantity: (state, action: PayloadAction<{ id: number; quantity: number }>) => {
       const { id, quantity } = action.payload;
@@ -40,9 +55,11 @@ const cartSlice = createSlice({
       if (item) {
         item.quantity = quantity;
       }
+      localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(state.items)); // Save cart items to local storage
     },
     clearCart: (state) => {
       state.items = [];
+      localStorage.removeItem(CART_STORAGE_KEY); // Remove cart items from local storage
     },
   },
 });

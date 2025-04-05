@@ -1,16 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useDispatch } from 'react-redux';
 import { addItem } from '../store/cartSlice';
 import './Home.css';
-import StarRatings from 'react-star-ratings'; // Import the StarRatings component for displaying star ratings
-import { auth } from '../firebasConfig'; // Import the auth object from firebaseConfig
-import { useAuthState } from 'react-firebase-hooks/auth'; // Import the useAuthState hook
-import { Link } from 'react-router-dom'; // Import the Link component for navigation
-import ShoppingCart from './ShoppingCart'; // Import the ShoppingCart component
-import Logout from './Logout'; // Import the Logout component
-import { db } from '../firebasConfig'; // Import the Firestore database
-import { collection, addDoc, getDocs, doc, deleteDoc, query, where } from 'firebase/firestore'; // Import Firestore functions
+import StarRatings from 'react-star-ratings';
+import { auth } from '../firebasConfig';
+import { useAuthState } from 'react-firebase-hooks/auth';
+import { Link } from 'react-router-dom';
+import ShoppingCart from './ShoppingCart';
+import Logout from './Logout';
+import { db } from '../firebasConfig';
+import { collection, addDoc, getDocs, doc, deleteDoc, query, where } from 'firebase/firestore';
 
 interface Product {
   docId: string;
@@ -41,13 +41,32 @@ const populateFirestore = async () => {
 };
 
 // Function to fetch products from Firestore or Fake Store API
-const fetchProducts = async (): Promise<Product[]> => {
-  const productsCollection = collection(db, 'products'); // Get the products collection from Firestore
-  const snapshot = await getDocs(productsCollection); // Get all documents in the products collection
+const fetchProducts = async (user: any): Promise<Product[]> => {
+  const productsCollection = collection(db, 'products');
+  const snapshot = await getDocs(productsCollection);
 
-  // Check if Firestore is empty
+  // If user is not logged in, fetch from Fake Store API
+  if (!user) {
+    const response = await fetch('https://fakestoreapi.com/products');
+    const products = await response.json();
+    return products.map((product: any) => {
+      const { title, price, description, category, image, rating } = product;
+      return {
+        docId: product.id.toString(), // Use API product ID as docId
+        id: product.id,
+        title: title,
+        price: price,
+        description: description,
+        category: category,
+        image: image,
+        stock: 100, // Default stock
+        rating: rating || { rate: 0, count: 0 },
+      };
+    });
+  }
+
+  // If user is logged in, fetch from Firestore
   if (!snapshot.empty) {
-    // If Firestore is not empty, fetch products from Firestore
     return snapshot.docs.map(doc => {
       const data = doc.data();
       return {
@@ -63,32 +82,31 @@ const fetchProducts = async (): Promise<Product[]> => {
       };
     });
   } else {
-    // If Firestore is empty, fetch from Fake Store API
-    const response = await fetch('https://fakestoreapi.com/products'); // Fetch products from the Fake Store API
-    const products = await response.json(); // Parse the response as JSON
-    // Map the API products to the same format as Firestore products
-    return products.map((product: any) => ({
-      docId: product.id.toString(), // Use API product ID as docId
-      id: product.id,
-      title: product.title,
-      price: product.price,
-      description: product.description,
-      category: product.category,
-      image: product.image,
-      stock: 100, // Default stock
-      rating: product.rating || { rate: 0, count: 0 },
-    }));
+    const response = await fetch('https://fakestoreapi.com/products');
+    const products = await response.json();
+    return products.map((product: any) => {
+      const { title, price, description, category, image, rating } = product;
+      return {
+        docId: product.id.toString(), // Use API product ID as docId
+        id: product.id,
+        title: title,
+        price: price,
+        description: description,
+        category: category,
+        image: image,
+        stock: 100, // Default stock
+        rating: rating || { rate: 0, count: 0 },
+      };
+    });
   }
 };
 
 // Function to fetch all categories from the Fake Store API
 const fetchCategories = async () => {
   const response = await fetch('https://fakestoreapi.com/products/categories');
-  // If the response is not ok, throw new Error
   if (!response.ok) {
     throw new Error('Network response was not ok');
   }
-  // Parse the response as JSON and return it
   return response.json();
 };
 
@@ -118,34 +136,23 @@ const fetchProductsByCategory = async (category: string): Promise<Product[]> => 
 
 // Home component: displays a list of products and allows filtering by category
 const Home = () => {
-  // Use the useQuery hook to fetch products from Firestore
-  const { data: products, error: productsError, isLoading: productsLoading } = useQuery<Product[]>({ queryKey: ['products'], queryFn: fetchProducts });
-  // Use the useQuery hook to fetch categories from the API
+  const [user, loading, error] = useAuthState(auth);
+  const { data: products, error: productsError, isLoading: productsLoading } = useQuery<Product[]>({ queryKey: ['products', user], queryFn: () => fetchProducts(user) });
   const { data: categories, error: categoriesError, isLoading: categoriesLoading } = useQuery({ queryKey: ['categories'], queryFn: fetchCategories });
-  // State variable to store the selected category
   const [selectedCategory, setSelectedCategory] = useState('');
-  // Use the useQuery hook to fetch products by category from the API
   const { data: categoryProducts, error: categoryProductsError, isLoading: categoryProductsLoading } = useQuery<Product[]>({
     queryKey: ['categoryProducts', selectedCategory],
     queryFn: () => fetchProductsByCategory(selectedCategory),
-    enabled: !!selectedCategory, // Only fetch products if a category is selected
+    enabled: !!selectedCategory,
   });
-  // Get the dispatch function from Redux
   const dispatch = useDispatch();
 
-  // Use the useAuthState hook to get the current user
-  const [user, loading, error] = useAuthState(auth);
-
-  // If any of the data is loading, display a loading message
   if (productsLoading || categoriesLoading || categoryProductsLoading || loading) return <div>Loading...</div>;
-  // If there is an error, display an error message
   if (productsError || categoriesError || categoryProductsError || error) return <div>Error: {productsError?.message || categoriesError?.message || categoryProductsError?.message || error?.message}</div>;
 
-  // Determine which products to display based on whether a category is selected
   const productsToDisplay = selectedCategory ? categoryProducts : products;
 
   const handleDelete = async (docId: string) => {
-    // Delete the product from Firestore
     if (window.confirm("Are you sure you want to delete this product?")) {
       try {
         const productDoc = doc(db, 'products', docId);
@@ -159,46 +166,31 @@ const Home = () => {
 
   return (
     <div>
-      {/* Heading for the products section */}
       <h1>Products</h1>
-      {/* Select element for filtering products by category */}
       <select className="category-select" value={selectedCategory} onChange={(e) => setSelectedCategory(e.target.value)}>
-        {/* Option to display all categories */}
         <option value="">All Categories</option>
-        {/* Map over the categories and create an option for each one */}
         {categories?.map((category) => (
           <option key={category} value={category}>{category}</option>
         ))}
       </select>
-      {/* Container for the products */}
       <div className="products-container">
-        {/* Map over the products to display and create a product card for each one */}
         {productsToDisplay?.map((product) => {
           const { docId, id, image, title, price, stock, description, rating } = product;
           return (
             <div key={docId} className="product-card">
-              {/* Display the product image */}
               <img src={image} alt={title} className="product-image" />
-              {/* Display the product title */}
               <h3>{title}</h3>
-              {/* Display the product price */}
               <p style={{ fontWeight: 'bold', fontStyle: 'italic' }}>Price: ${price?.toFixed(2)}</p>
               <p>Stock: {stock}</p>
-
-              {/* Display the product category */}
-              {/* <p>Category: {product.category}</p> */}
-              {/* Display the product description */}
               <p>{description}</p>
-              {/* Display the star rating for the product */}
               <StarRatings
                 rating={rating?.rate}
                 starRatedColor="black"
                 numberOfStars={5}
                 starEmptyColor='white'
-                starDimension='25px'
+                starDimension='20px'
                 name='rating'
               />
-              {/* Button to add the product to the cart */}
               <button
                 className='add-to-cart-button'
                 onClick={() => dispatch(addItem({
@@ -220,8 +212,6 @@ const Home = () => {
           );
         })}
       </div>
-
-      {/* Conditionally render the link to the user profile if the user is logged in */}
       {user && (
         <>
           <div style={{ position: 'absolute', top: '10px', left: '10px' }}>

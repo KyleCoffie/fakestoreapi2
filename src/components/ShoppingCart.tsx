@@ -4,6 +4,7 @@ import { removeItem, updateItemQuantity, clearCart } from '../store/cartSlice';
 import { db, auth } from '../firebasConfig'; // Import Firebase
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore'; // Import Firestore functions
 import { useAuthState } from 'react-firebase-hooks/auth'; // Import useAuthState hook
+import { Link } from 'react-router-dom'; // Import the Link component for navigation
 import './Home.css';
 
 // ShoppingCart component: displays the items in the shopping cart and allows the user to remove items, update quantities, and checkout
@@ -76,8 +77,12 @@ const ShoppingCart = () => {
                 className='remove-item-button'
                 onClick={() => handleRemoveItem(item.id)}>Remove</button>
                 {/* Buttons to update the quantity of the item */}
-                <button onClick={() => handleUpdateQuantity(item.id, item.quantity + 1)}> + </button>
-                <button onClick={() => handleUpdateQuantity(item.id, item.quantity - 1)}> - </button>
+                <button 
+                className='quantity-button'
+                onClick={() => handleUpdateQuantity(item.id, item.quantity + 1)}> + </button>
+                <button 
+                className='quantity-button'
+                onClick={() => handleUpdateQuantity(item.id, item.quantity - 1)}> - </button>
               </li>
             ))}
           </ul>
@@ -86,38 +91,39 @@ const ShoppingCart = () => {
           {/* Display the total price of the items in the cart */}
           <p>Total Price: ${calculateTotal().toFixed(2)}</p>
           {/* Button to place order */}
-          {user && cartItems.length > 0 && (
-            <button
-              className='place-order-button'
-              onClick={async () => {
-                if (!user) {
-                  alert('Please login to place an order.');
-                  return;
-                }
+          {user ? (
+            cartItems.length > 0 && (
+              <button
+                className='place-order-button'
+                onClick={async () => {
+                  const totalPrice = cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
 
-                const totalPrice = cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
+                  const orderData = {
+                    userId: user.uid,
+                    items: cartItems,
+                    totalPrice: totalPrice,
+                    createdAt: serverTimestamp(),
+                  };
 
-                const orderData = {
-                  userId: user.uid,
-                  items: cartItems,
-                  totalPrice: totalPrice,
-                  createdAt: serverTimestamp(),
-                };
+                  dispatch(clearCart());
+                  setCheckout(true);
 
-                dispatch(clearCart());
-                setCheckout(true);
-
-                try {
-                  const ordersCollection = collection(db, 'orders');
-                  await addDoc(ordersCollection, orderData);
-                  alert('Order placed successfully!');
-                } catch (error: any) {
-                  alert(`Error placing order: ${error.message}`);
-                }
-              }}
-            >
-              Place Order
-            </button>
+                  try {
+                    const ordersCollection = collection(db, 'orders');
+                    await addDoc(ordersCollection, orderData);
+                    alert('Order placed successfully!');
+                  } catch (error: any) {
+                    alert(`Error placing order: ${error.message}`);
+                  }
+                }}
+              >
+                Place Order
+              </button>
+            )
+          ) : (
+            <div>
+              <p>Please <Link to="/login">login</Link> or <Link to="/register">register</Link> to complete your purchase.</p>
+            </div>
           )}
         </>
       )}
