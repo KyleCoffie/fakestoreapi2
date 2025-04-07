@@ -1,5 +1,4 @@
-// filepath: c:\Users\kylec\Documents\Coding Temple\specmod2\fakestoreapi\jest.config.js
-module.exports = {
+export default {
     preset: 'ts-jest',
     testEnvironment: 'jsdom',
     transform: {
