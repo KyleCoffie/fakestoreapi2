@@ -6,11 +6,12 @@ import { collection, addDoc, serverTimestamp } from 'firebase/firestore'; // Imp
 import { useAuthState } from 'react-firebase-hooks/auth'; // Import useAuthState hook
 import { Link } from 'react-router-dom'; // Import the Link component for navigation
 import './Home.css';
+import { CartState,CartItem } from '../store/types';
+import { RootState } from '../store/store';
 
-// ShoppingCart component: displays the items in the shopping cart and allows the user to remove items, update quantities, and checkout
 const ShoppingCart = () => {
   // Get the cart items from the Redux store
-  const cartItems = useSelector((state: any) => state.cart.items);
+  const cartItems = useSelector((state: RootState) => state.cart.items);
   // Get the dispatch function from Redux
   const dispatch = useDispatch();
   // Get the current user
@@ -75,7 +76,7 @@ const ShoppingCart = () => {
                 {/* Button to remove the item from the cart */}
                 <button 
                 className='remove-item-button'
-                onClick={() => handleRemoveItem(item.id)}>Remove</button>
+                onClick={() => handleRemoveItem(item.id)}>Remove Item</button>
                 {/* Buttons to update the quantity of the item */}
                 <button 
                 className='quantity-button'
