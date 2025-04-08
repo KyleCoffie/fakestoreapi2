@@ -43,12 +43,24 @@ Before running the application, make sure you have a Firebase project set up and
     This will start the development server, and you can view the application in your browser.
 
 ## Dependencies
-*   React
-*   Vite
-*   @tanstack/react-query
-*   Redux Toolkit
-*   react-redux
-*   firebase
-*   react-firebase-hooks
-*   react-router-dom
-*   react-star-ratings
+*   "@reduxjs/toolkit": "^2.6.1",
+*    "@tanstack/react-query": "^5.69.0",
+*    "@tanstack/react-query-devtools": "^5.69.0",
+*    "axios": "^1.8.4",
+*    "firebase": "^11.6.0",
+*    "glob": "^11.0.1",
+*    "lru-cache": "^11.1.0",
+*    "react": "^19.0.0",
+*    "react-dom": "^19.0.0",
+*    "react-firebase-hooks": "^5.1.1",
+*    "react-redux": "^9.2.0",
+*    "react-router-dom": "^7.4.1",
+*    "react-star-ratings": "^2.3.0",
+*    "redux-mock-store": "^1.5.5",
+*    "text-encoding": "^0.7.0",
+*    "util": "^0.12.5",
+*    "uuid": "^11.1.0"
+## Unit Testing
+I have added testing for the SHoppingCart component. Scefically the remove item button within the cart.
+I've also added a test for the Logout function to render the button, call signOut and navigate to Login, displays loading state,and to display a message if logout fails.
+
