@@ -16,7 +16,10 @@ import { fetchProducts, fetchCategories, populateFirestore, fetchProductsByCateg
 // Home component: displays a list of products and allows filtering by category
 const Home = () => {
   const [user, loading, error] = useAuthState(auth);
-  const { data: products, error: productsError, isLoading: productsLoading } = useQuery({ queryKey: ['products', user], queryFn: () => fetchProducts(user) });
+  const { data: products, error: productsError, isLoading: productsLoading } = useQuery({
+    queryKey: ['products', user],
+    queryFn: () => user ? fetchProducts(user) : [],
+  });
   const { data: categories, error: categoriesError, isLoading: categoriesLoading } = useQuery({ queryKey: ['categories'], queryFn: fetchCategories });
   const [selectedCategory, setSelectedCategory] = useState('');
   const { data: categoryProducts, error: categoryProductsError, isLoading: categoryProductsLoading } = useQuery({
@@ -49,7 +52,7 @@ const Home = () => {
         <h1>Products</h1>
         <select className="category-select" value={selectedCategory} onChange={(e) => setSelectedCategory(e.target.value)}>
           <option value="">All Categories</option>
-          {categories?.map((category) => (
+          {categories?.map((category: string) => (
             <option key={category} value={category}>{category}</option>
           ))}
         </select>
@@ -59,12 +62,12 @@ const Home = () => {
           const { docId, id, image, title, price, description, rating } = product;
           return (
             <div key={docId} className="product-card">
-                <img src={image} alt={title} className="product-image" />
-                <h3>{title}</h3>
-                <p className="product-price">Price: ${price?.toFixed(2)}</p>
-                <p>{description}</p>
+              <img src={image} alt={title} className="product-image" />
+              <h3>{title}</h3>
+              <p className="product-price">Price: ${price?.toFixed(2)}</p>
+              <p>{description}</p>
                 <StarRatings
-                  rating={rating?.rate}
+                  rating={rating?.rate || 0}
                 starRatedColor="black"
                 numberOfStars={5}
                 starEmptyColor='white'
@@ -92,20 +95,12 @@ const Home = () => {
           );
         })}
       </div>
-      {user && (
-        <>
-          <div style={{ position: 'absolute', top: '10px', left: '10px' }}>
-            <Link to="/profile">
-              <button>View Profile</button>
-            </Link>
-            <Logout />
-          </div>
-          <Link to="/add-product">
-            <button>Create New Product</button>
-          </Link>
-          {user && <button onClick={populateFirestore}>Populate Firestore</button>}
-        </>
-      )}
+      <div style={{ display: 'flex', justifyContent: 'center' }}>
+        <Link to="/add-product">
+          <button>Create New Product</button>
+        </Link>
+        {user && <button onClick={populateFirestore}>Populate Firestore</button>}
+      </div>
       <ShoppingCart />
     </div>
   );

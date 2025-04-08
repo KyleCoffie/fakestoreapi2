@@ -64,3 +64,6 @@ Before running the application, make sure you have a Firebase project set up and
 I have added testing for the SHoppingCart component. Scefically the remove item button within the cart.
 I've also added a test for the Logout function to render the button, call signOut and navigate to Login, displays loading state,and to display a message if logout fails.
 
+## Link to vercel page
+
+https://fakestoreapi2-kylecoffie-kyle-coffies-projects.vercel.app

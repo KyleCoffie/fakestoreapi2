@@ -39,6 +39,7 @@
     "@types/jest": "^29.5.14",
     "@types/react": "^19.0.10",
     "@types/react-dom": "^19.0.4",
+    "@types/react-star-ratings": "^2.3.3",
     "@types/redux-mock-store": "^1.5.0",
     "@vitejs/plugin-react": "^4.3.4",
     "babel-jest": "^29.7.0",
