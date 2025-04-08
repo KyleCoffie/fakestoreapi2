@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { auth } from '../firebasConfig';
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { Link } from 'react-router-dom';
-import './Login.css'; // Import stylesheet for styling the login form
+import './Login.css'; 
 
 // Define the Login component
 const Login: React.FC = () => {

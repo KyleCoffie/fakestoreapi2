@@ -3,6 +3,7 @@ import { auth, db } from '../firebasConfig'; // Import auth and db from central 
 import { doc, getDoc, updateDoc, deleteDoc, Timestamp } from 'firebase/firestore'; // Firestore functions
 import { onAuthStateChanged, User, deleteUser } from 'firebase/auth'; // Auth functions
 import { Link } from 'react-router-dom';
+import './UserProfile.css'
 
 // Define an interface for the user profile data structure
 interface UserProfileData {
@@ -149,7 +150,7 @@ const UserProfile: React.FC = () => {
 
   // --- Main JSX ---
   return (
-    <div>
+    <div className='profile-form-container'>
       <h2>User Profile</h2>
       {error && <p style={{ color: 'red' }}>Error: {error}</p>}
 
@@ -161,41 +162,42 @@ const UserProfile: React.FC = () => {
       </div>
 
       <hr />
+      <div className='profile-form'>
 
-      {/* Update Profile Form */}
-      <h3>Update Profile</h3>
-      <form onSubmit={handleUpdateProfile}>
-        <div>
-          <label htmlFor="displayName">Display Name:</label>
-          <input
-            type="text"
-            id="displayName"
-            value={displayNameInput}
-            onChange={(e) => setDisplayNameInput(e.target.value)}
-          />
-        </div>
-        <div>
-          <label htmlFor="address">Address:</label>
-          <input
-            type="text"
-            id="address"
-            value={addressInput}
-            onChange={(e) => setAddressInput(e.target.value)}
-          />
-        </div>
-        <div>
-          <label htmlFor="phoneNumber">Phone Number:</label>
-          <input
-            type="tel" 
-            id="phoneNumber"
-            value={phoneNumberInput}
-            onChange={(e) => setPhoneNumberInput(e.target.value)}
-          />
-        </div>
-        <button type="submit" disabled={isUpdating}>
-          {isUpdating ? 'Updating...' : 'Update Profile'}
-        </button>
-      </form>
+        <h3>Update Profile</h3>
+        <form className="profile-form" onSubmit={handleUpdateProfile}>
+          <div>
+            <label htmlFor="displayName">Display Name:</label>
+            <input
+              type="text"
+              id="displayName"
+              value={displayNameInput}
+              onChange={(e) => setDisplayNameInput(e.target.value)}
+            />
+          </div>
+          <div>
+            <label htmlFor="address">Address:</label>
+            <input
+              type="text"
+              id="address"
+              value={addressInput}
+              onChange={(e) => setAddressInput(e.target.value)}
+            />
+          </div>
+          <div>
+            <label htmlFor="phoneNumber">Phone Number:</label>
+            <input
+              type="tel" 
+              id="phoneNumber"
+              value={phoneNumberInput}
+              onChange={(e) => setPhoneNumberInput(e.target.value)}
+            />
+          </div>
+          <button type="submit" disabled={isUpdating}>
+            {isUpdating ? 'Updating...' : 'Update Profile'}
+          </button>
+        </form>
+      </div>
 
       <hr />
 

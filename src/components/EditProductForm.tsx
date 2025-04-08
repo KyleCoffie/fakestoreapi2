@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { db } from '../firebasConfig';
 import { collection, doc, getDoc, updateDoc } from 'firebase/firestore';
 import { useNavigate, useParams, Link } from 'react-router-dom';
-import './ProductForm.css'; // Import stylesheet for styling the form
+import './ProductForm.css'; 
 
 // Define the EditProductForm component
 const EditProductForm = () => {

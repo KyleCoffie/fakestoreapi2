@@ -3,6 +3,7 @@ import { db, auth } from '../firebasConfig';
 import { collection, query, where, orderBy, getDocs } from 'firebase/firestore';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { Link } from 'react-router-dom';
+import '/src/App.css';
 
 
 // Define the structure of an order
