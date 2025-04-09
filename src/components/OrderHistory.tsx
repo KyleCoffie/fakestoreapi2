@@ -3,7 +3,7 @@ import { db, auth } from '../firebasConfig';
 import { collection, query, where, orderBy, getDocs } from 'firebase/firestore';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { Link } from 'react-router-dom';
-import '/src/App.css';
+import '/src/components/OrderHistory.css';
 
 
 // Define the structure of an order
@@ -60,7 +60,7 @@ const OrderHistory = () => {
   }, [user]);
 
   return (
-    <div>
+    <div className='orderhistory-form-container'>
       <h1>Order History</h1>
       {orders.length === 0 ? (
         <p>No orders found.</p>

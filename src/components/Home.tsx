@@ -95,10 +95,7 @@ const Home = () => {
           );
         })}
       </div>
-      <div style={{ display: 'flex', justifyContent: 'center' }}>
-        <Link to="/add-product">
-          <button>Create New Product</button>
-        </Link>
+      <div style={{ display: 'flex', justifyContent: 'left' }}>
         {user && <button onClick={populateFirestore}>Populate Firestore</button>}
       </div>
       <ShoppingCart />

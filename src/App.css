@@ -13,10 +13,11 @@ nav {
   justify-content: center;
   align-items: left;
   padding: 1px;
-  background-color: #f0f0f0;
+  background-color: hwb(51 87% 10%);
   width: 75px;
   height:350px;
   position:fixed;
+  border-radius: 10px;
 }
 
 nav a {
@@ -27,4 +28,11 @@ nav a {
 
 nav a.bold {
   font-weight: bold;
+}
+.nav-link {
+  background-color: hwb(51 87% 10%);
+  width: 75px;
+  margin-right: 20px;
+  border: none;
+  font-weight: 600;
 }

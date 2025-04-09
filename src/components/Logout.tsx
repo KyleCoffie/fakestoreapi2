@@ -2,40 +2,38 @@ import { getAuth, signOut } from "firebase/auth";
 import { useNavigate } from 'react-router-dom';
 import React, { useState } from 'react';
 
-/**
- * Logs out the currently authenticated user from Firebase Authentication.
- */
-const Logout = () => {
+type LogoutProps = {
+  className?: string;
+};
+
+const Logout: React.FC<LogoutProps> = ({ className }) => {
   const navigate = useNavigate();
-  const [error, setError] = useState<string | null>(null);  // For error feedback
-  const [loading, setLoading] = useState(false);  // To track loading state
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
 
   const logoutUser = async (): Promise<void> => {
-    setLoading(true); // Set loading to true while logging out
-    setError(null); // Reset previous errors
+    setLoading(true);
+    setError(null);
 
     try {
-      // Get the authentication instance
       const auth = getAuth();
-
-      // Sign out the user
       await signOut(auth);
       console.log("User logged out");
-      navigate('/login'); // Redirect to login page after logout
+      navigate('/login');
     } catch (error) {
-      setError("Logout failed. Please try again."); // Set error message
-      console.error("Logout error:", error); // Log any errors that occur during logout
+      setError("Logout failed. Please try again.");
+      console.error("Logout error:", error);
     } finally {
-      setLoading(false); // Stop loading after the process completes
+      setLoading(false);
     }
   };
 
   return (
     <div>
-      <button onClick={logoutUser} disabled={loading}>
+      <button onClick={logoutUser} disabled={loading} className={className}>
         {loading ? 'Logging out...' : 'Logout'}
       </button>
-      {error && <p style={{ color: 'red' }}>{error}</p>} {/* Display error message */}
+      {error && <p style={{ color: 'red' }}>{error}</p>}
     </div>
   );
 };

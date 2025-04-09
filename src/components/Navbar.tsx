@@ -13,16 +13,15 @@ const Navbar = () => {
       
       <Link to="/" className="bold">Home</Link>
       <Link to="/profile">Profile</Link>
-      {/* <Link to="/add-product">Add Product</Link> */}
       <Link to="/orders">Orders</Link>
-      
+      <Link to="/add-product">Create New Product</Link>
       {!user ? (
         <>
           <Link to="/login">Login</Link>
           <Link to="/register">Register</Link>
         </>
       ) : (
-        <Logout />
+        <Logout className='nav-link'/>
       )}
     </nav>
   );
