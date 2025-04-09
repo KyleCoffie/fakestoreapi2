@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "webpack src/App2.tsx -o public/bundle.ts",
+    "deploy": "firebase deploy --token \"$FIREBASE_TOKEN\"",
     "lint": "eslint .--ext js,jsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
     "test": "jest"
