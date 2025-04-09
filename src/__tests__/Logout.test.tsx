@@ -1,9 +1,9 @@
 import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import Logout from '../components/Logout'; // Adjust the path to where your Logout component is
+import Logout from '../components/Logout'; 
 import { getAuth, signOut } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
-import '@testing-library/jest-dom'; // For matchers like toBeInTheDocument()
+import '@testing-library/jest-dom'; 
 
 // Mock the necessary Firebase and React Router hooks
 jest.mock('firebase/auth', () => ({
