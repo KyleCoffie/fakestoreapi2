@@ -3,6 +3,20 @@ import { useQuery } from '@tanstack/react-query';
 import { useDispatch } from 'react-redux';
 import { addItem } from '../store/cartSlice';
 import './Home.css';
+
+// Define the Product type
+interface Product {
+  docId: string;
+  id: number;
+  title: string;
+  price: number;
+  description: string;
+  image: string;
+  rating?: {
+    rate: number;
+    count: number;
+  };
+}
 import StarRatings from 'react-star-ratings';
 import { auth } from '../firebasConfig';
 import { useAuthState } from 'react-firebase-hooks/auth';
@@ -16,10 +30,6 @@ import { fetchProducts, fetchCategories, populateFirestore, fetchProductsByCateg
 // Home component: displays a list of products and allows filtering by category
 const Home = () => {
   const [user, loading, error] = useAuthState(auth);
-  const { data: products, error: productsError, isLoading: productsLoading } = useQuery({
-    queryKey: ['products', user],
-    queryFn: () => user ? fetchProducts(user) : [],
-  });
   const { data: categories, error: categoriesError, isLoading: categoriesLoading } = useQuery({ queryKey: ['categories'], queryFn: fetchCategories });
   const [selectedCategory, setSelectedCategory] = useState('');
   const { data: categoryProducts, error: categoryProductsError, isLoading: categoryProductsLoading } = useQuery({
@@ -27,10 +37,24 @@ const Home = () => {
     queryFn: () => fetchProductsByCategory(selectedCategory),
     enabled: !!selectedCategory,
   });
+  const [products, setProducts] = useState<Product[]>([]);
   const dispatch = useDispatch();
 
-  if (productsLoading || categoriesLoading || categoryProductsLoading || loading) return <div>Loading...</div>;
-  if (productsError || categoriesError || categoryProductsError || error) return <div>Error: {productsError?.message || categoriesError?.message || categoryProductsError?.message || error?.message}</div>;
+  useEffect(() => {
+    const fetchProductsData = async () => {
+      try {
+        const productsData = await fetchProducts(user);
+        setProducts(productsData);
+      } catch (error: any) {
+        console.error("Error fetching products:", error);
+      }
+    };
+
+    fetchProductsData();
+  }, [user]);
+
+  if (categoriesLoading || categoryProductsLoading || loading) return <div>Loading...</div>;
+  if (categoriesError || categoryProductsError || error) return <div>Error: {categoriesError?.message || categoryProductsError?.message || error?.message}</div>;
 
   const productsToDisplay = selectedCategory ? categoryProducts : products;
 

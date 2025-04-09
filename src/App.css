@@ -12,7 +12,7 @@ nav {
   display: grid;
   justify-content: center;
   padding: 1px;
-  background-color: hwb(51 87% 10%);
+  background-color: rgba(241, 226, 207, 0.825);
   width: 75px;
   height:350px;
   position:fixed;
@@ -29,7 +29,7 @@ nav a.bold {
   font-weight: bold;
 }
 .nav-link {
-  background-color: hwb(51 87% 10%);
+  background-color: rgba(241, 226, 207, 0.825);
   width: 75px;
   margin-right: 20px;
   border: none;
