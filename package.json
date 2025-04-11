@@ -7,14 +7,15 @@
     "dev": "vite",
     "build": "vite build && tsc -b",
     "deploy": "firebase deploy --token \"$FIREBASE_TOKEN\"",
-    "lint": "eslint .--ext js,jsx --report-unused-disable-directives --max-warnings 0",
+    "lint": "eslint .",
     "preview": "vite preview",
-    "test": "jest"
+    "test": "react-scripts test"
   },
   "dependencies": {
     "@reduxjs/toolkit": "^2.6.1",
     "@tanstack/react-query": "^5.69.0",
     "@tanstack/react-query-devtools": "^5.69.0",
+    "@testing-library/dom": "^10.4.0",
     "axios": "^1.8.4",
     "firebase": "^11.6.0",
     "glob": "^11.0.1",
@@ -24,6 +25,7 @@
     "react-firebase-hooks": "^5.1.1",
     "react-redux": "^9.2.0",
     "react-router-dom": "^7.4.1",
+    "react-scripts": "^5.0.1",
     "react-star-ratings": "^2.3.0",
     "redux-mock-store": "^1.5.5",
     "text-encoding": "^0.7.0",
