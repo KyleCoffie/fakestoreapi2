@@ -1,3 +1,8 @@
+// Polyfill TextEncoder/TextDecoder for Jest environment
+import { TextEncoder, TextDecoder } from 'util';
+global.TextEncoder = TextEncoder;
+(global as any).TextDecoder = TextDecoder;
+
 import React from 'react';
 import { render, fireEvent, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
@@ -43,10 +48,13 @@ const renderWithStore = (ui: React.ReactElement, preloadedState: CartItem[] = []
 
   return render(
     <Provider store={store}>
-      <MemoryRouter>{ui}</MemoryRouter> 
+      <MemoryRouter>{ui}</MemoryRouter>
     </Provider>
   );
 };
+
+// (global as any).TextEncoder = require('util').TextEncoder; // Removed this line as it's now at the top
+// (global as any).TextDecoder = require('util').TextDecoder; // Removed this line as it's now at the top
 
 test('removes item on button click', async () => {
   const { getByText, queryByText, getByRole } = renderWithStore(

@@ -41,10 +41,12 @@ describe('Logout Component', () => {
     fireEvent.click(screen.getByText('Logout'));
 
     // Ensure signOut was called once
-    await waitFor(() => expect(signOut).toHaveBeenCalledTimes(1));
-
-    // Check if navigate was called with '/login'
-    expect(mockNavigate).toHaveBeenCalledWith('/login');
+    // Wait for async operations and check assertions
+    await waitFor(() => {
+      expect(signOut).toHaveBeenCalledTimes(1);
+      // Check if navigate was called with '/login' after async operations
+      expect(mockNavigate).toHaveBeenCalledWith('/login');
+    });
   });
 
   test('should show loading state when logging out', () => {
@@ -71,9 +73,9 @@ describe('Logout Component', () => {
     fireEvent.click(screen.getByText('Logout'));
 
     // Wait for the error message to appear
-    await waitFor(() => screen.getByText('Logout failed. Please try again.'));
-    
-    // Check if the error message is shown
-    expect(screen.getByText('Logout failed. Please try again.')).toBeInTheDocument();
+    // Wait for the error message to appear and assert within waitFor
+    await waitFor(() => {
+      expect(screen.getByText('Logout failed. Please try again.')).toBeInTheDocument();
+    });
   });
 });

@@ -9,7 +9,7 @@
     "deploy": "firebase deploy --token \"$FIREBASE_TOKEN\"",
     "lint": "eslint .",
     "preview": "vite preview",
-    "test": "react-scripts test"
+    "test": "jest"
   },
   "dependencies": {
     "@reduxjs/toolkit": "^2.6.1",
@@ -44,6 +44,8 @@
     "@types/react-dom": "^19.0.4",
     "@types/react-star-ratings": "^2.3.3",
     "@types/redux-mock-store": "^1.5.0",
+    "@typescript-eslint/eslint-plugin": "^5.62.0",
+    "@typescript-eslint/parser": "^5.62.0",
     "@vitejs/plugin-react": "^4.3.4",
     "babel-jest": "^29.7.0",
     "eslint": "^8.0.0",
