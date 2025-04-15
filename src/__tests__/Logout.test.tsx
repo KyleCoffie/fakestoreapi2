@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor, act } from '@testing-library/react';
 import Logout from '../components/Logout'; 
 import { getAuth, signOut } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
@@ -21,7 +21,8 @@ describe('Logout Component', () => {
   beforeEach(() => {
     // Reset any mocks before each test
     mockNavigate = jest.fn();
-    (useNavigate as jest.Mock).mockReturnValue(mockNavigate);
+    (useNavigate as jest.Mock<() => void>).mockReturnValue(mockNavigate); // More precise type annotation
+    (signOut as jest.Mock).mockReset();
   });
 
   test('should render logout button', () => {
@@ -37,21 +38,17 @@ describe('Logout Component', () => {
     
     render(<Logout />);
     
-    // Simulate button click
-    fireEvent.click(screen.getByText('Logout'));
-
-    // Ensure signOut was called once
-    // Wait for async operations and check assertions
-    await waitFor(() => {
-      expect(signOut).toHaveBeenCalledTimes(1);
-      // Check if navigate was called with '/login' after async operations
-      expect(mockNavigate).toHaveBeenCalledWith('/login');
+    
+      fireEvent.click(screen.getByText('Logout'));
+      await waitFor(() => {
+        expect(signOut).toHaveBeenCalledTimes(1);
+        expect(mockNavigate).toHaveBeenCalledWith('/login');
+      });
     });
-  });
 
-  test('should show loading state when logging out', () => {
+  test('should show loading state when logging out', async() => {
     // Mock signOut to resolve successfully
-    (signOut as jest.Mock).mockResolvedValueOnce(undefined);
+    (signOut as jest.Mock).mockResolvedValueOnce(new Promise(()=> {}));
 
     render(<Logout />);
     
@@ -59,8 +56,11 @@ describe('Logout Component', () => {
     fireEvent.click(screen.getByText('Logout'));
 
     // Check that the button displays the loading state
-    expect(screen.getByText('Logging out...')).toBeInTheDocument();
-    expect(screen.getByRole('button')).toBeDisabled(); // Ensure the button is disabled during logout
+    await waitFor (()=>{
+        expect(screen.getByText('Logging out...')).toBeInTheDocument();
+        expect(screen.getByRole('button')).toBeDisabled(); // Ensure the button is disabled during logout
+
+    })
   });
 
   test('should display error message when logout fails', async () => {
@@ -68,14 +68,13 @@ describe('Logout Component', () => {
     (signOut as jest.Mock).mockRejectedValueOnce(new Error('Logout error'));
 
     render(<Logout />);
-    
-    // Simulate button click
     fireEvent.click(screen.getByText('Logout'));
-
-    // Wait for the error message to appear
-    // Wait for the error message to appear and assert within waitFor
-    await waitFor(() => {
+    
+    await waitFor (() => { 
       expect(screen.getByText('Logout failed. Please try again.')).toBeInTheDocument();
     });
   });
 });
+
+// Mock window.alert to prevent pop-ups during testing
+global.alert = jest.fn();

@@ -99,4 +99,4 @@ const AddProductForm = () => {
   );
 };
 
-export default AddProductForm;
+export {AddProductForm} ;

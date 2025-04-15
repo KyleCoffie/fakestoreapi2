@@ -14,6 +14,7 @@ export default [
         ...globals.jest,
         ...globals.node, // Add Node.js globals (includes 'global')
       },
+      parser: '@typescript-eslint/parser',
       parserOptions: {
         ecmaVersion: 'latest',
         ecmaFeatures: { jsx: true },

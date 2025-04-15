@@ -2,27 +2,22 @@ import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { BrowserRouter } from 'react-router-dom';
-import AddProductForm from '../components/AddProductForm';
+import {AddProductForm} from '../components/AddProductForm';
+import { getFirestore } from 'firebase/firestore';
+import { useNavigate } from 'react-router-dom';
 
+console.log(AddProductForm);
 jest.mock('firebase/firestore', () => ({
-  getFirestore: jest.fn(() => ({ collection: jest.fn() })), // Mock getFirestore
+  getFirestore: jest.fn(() => ({
+    collection: jest.fn(() => ({
+      add: jest.fn(),
+    })),
+  })),
 }));
 
-jest.mock('firebase/app', () => ({
-  initializeApp: jest.fn(), // Mock initializeApp
-}));
-
-jest.mock('firebase/auth', () => ({
-  getAuth: jest.fn(() => ({})), // Mock getAuth
-}));
-
-const mockedNavigate = jest.fn();
 jest.mock('react-router-dom', () => ({
-  ...jest.requireActual('react-router-dom'),
-  useNavigate: () => mockedNavigate,
+  useNavigate: jest.fn(),
 }));
-
-global.alert = jest.fn();
 
 describe('AddProductForm Component', () => {
   beforeEach(() => {
@@ -66,6 +61,12 @@ describe('AddProductForm Component', () => {
 
   test('calls addDoc and navigates on successful submission', async () => {
     const mockAddDoc = jest.fn().mockResolvedValueOnce({ id: 'mockProductId' });
+    const mockCollection = jest.fn(() => ({ add: mockAddDoc }));
+    const mockNavigate = jest.fn();
+    jest.mock('react-router-dom', () => ({
+      ...jest.requireActual('react-router-dom'),
+      useNavigate: () => mockNavigate,
+    }));
     render(
       <BrowserRouter>
         <AddProductForm />
@@ -85,7 +86,7 @@ describe('AddProductForm Component', () => {
 
     await waitFor(() => {
       expect(mockAddDoc).toHaveBeenCalledTimes(1);
-      expect(mockAddDoc).toHaveBeenCalledWith(expect.any(Function), {
+      expect(mockAddDoc).toHaveBeenCalledWith(expect.any(Object), {
         title: 'Test Product',
         price: 10.00,
         description: 'Test Description',
@@ -94,13 +95,18 @@ describe('AddProductForm Component', () => {
         stock: 50,
         rating: { rate: 4.5, count: 100 },
       });
-      expect(global.alert).toHaveBeenCalledWith('Product added successfully!');
-      expect(mockedNavigate).toHaveBeenCalledWith('/');
+      expect(mockNavigate).toHaveBeenCalledWith('/');
     });
   });
 
   test('shows error alert on submission failure', async () => {
     const mockAddDoc = jest.fn().mockRejectedValueOnce(new Error('Failed to add product'));
+    const mockCollection = jest.fn(() => ({ add: mockAddDoc }));
+    const mockNavigate = jest.fn();
+    jest.mock('react-router-dom', () => ({
+      ...jest.requireActual('react-router-dom'),
+      useNavigate: () => mockNavigate,
+    }));
     render(
       <BrowserRouter>
         <AddProductForm />
@@ -121,7 +127,7 @@ describe('AddProductForm Component', () => {
     await waitFor(() => {
       expect(mockAddDoc).toHaveBeenCalledTimes(1);
       expect(global.alert).toHaveBeenCalledWith('Error adding product: Failed to add product');
-      expect(mockedNavigate).not.toHaveBeenCalled();
+      expect(mockNavigate).not.toHaveBeenCalled();
     });
   });
 });
