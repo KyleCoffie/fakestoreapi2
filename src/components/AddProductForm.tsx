@@ -6,7 +6,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import './ProductForm.css'; // Import the stylesheet for form styling
 
 // Define the AddProductForm component
-const AddProductForm = () => {
+const AddProductForm:React.FC = () => {
   // State variables to store form input values
   const [title, setTitle] = useState('');
   const [price, setPrice] = useState('');
@@ -99,4 +99,4 @@ const AddProductForm = () => {
   );
 };
 
-export {AddProductForm} ;
+export default AddProductForm ;

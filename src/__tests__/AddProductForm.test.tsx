@@ -1,13 +1,19 @@
 import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import { BrowserRouter } from 'react-router-dom';
-import {AddProductForm} from '../components/AddProductForm';
-import { getFirestore } from 'firebase/firestore';
+import { BrowserRouter, Link } from 'react-router-dom';
+import AddProductForm from '../components/AddProductForm';
+import { getFirestore, collection, addDoc } from 'firebase/firestore';
 import { useNavigate } from 'react-router-dom';
 
-console.log(AddProductForm);
+jest.mock('../firebasConfig', () => ({
+  db: {
+    collection: jest.fn(),
+  },
+}));
+
 jest.mock('firebase/firestore', () => ({
+  addDoc: jest.fn(),
   getFirestore: jest.fn(() => ({
     collection: jest.fn(() => ({
       add: jest.fn(),
@@ -15,9 +21,14 @@ jest.mock('firebase/firestore', () => ({
   })),
 }));
 
+
 jest.mock('react-router-dom', () => ({
+  ...jest.requireActual('react-router-dom'),
   useNavigate: jest.fn(),
 }));
+
+jest.spyOn(window, 'alert').mockImplementation(() => {});
+
 
 describe('AddProductForm Component', () => {
   beforeEach(() => {
@@ -54,19 +65,21 @@ describe('AddProductForm Component', () => {
     fireEvent.change(titleInput, { target: { value: 'New Test Product' } });
     expect(titleInput).toHaveValue('New Test Product');
 
-    const priceInput = screen.getByLabelText(/Price:/i);
-    fireEvent.change(priceInput, { target: { value: '99.99' } });
-    expect(priceInput).toHaveValue('99.99');
+    const priceInput = screen.getByLabelText(/Price:/i) as HTMLInputElement;
+    fireEvent.change(priceInput, { target: { value: 99.99 } });
+    expect(Number(priceInput.value)).toBe(99.99); // Ensure the value is checked as a number
   });
 
   test('calls addDoc and navigates on successful submission', async () => {
-    const mockAddDoc = jest.fn().mockResolvedValueOnce({ id: 'mockProductId' });
-    const mockCollection = jest.fn(() => ({ add: mockAddDoc }));
     const mockNavigate = jest.fn();
-    jest.mock('react-router-dom', () => ({
-      ...jest.requireActual('react-router-dom'),
-      useNavigate: () => mockNavigate,
+    const mockCollection = jest.fn();
+    jest.mock('firebase/firestore', () => ({
+      addDoc: jest.fn(),
+      getFirestore: jest.fn(() => ({
+        collection: mockCollection,
+      })),
     }));
+
     render(
       <BrowserRouter>
         <AddProductForm />
@@ -82,31 +95,35 @@ describe('AddProductForm Component', () => {
     fireEvent.change(screen.getByLabelText(/Rating Rate:/i), { target: { value: '4.5' } });
     fireEvent.change(screen.getByLabelText(/Rating Count:/i), { target: { value: '100' } });
 
-    fireEvent.click(screen.getByRole('button', { name: /Add Product/i }));
+    const addProductBtn = screen.getByRole('button', { name: /Add Product/i });
+    fireEvent.click(addProductBtn);
 
-    await waitFor(() => {
-      expect(mockAddDoc).toHaveBeenCalledTimes(1);
-      expect(mockAddDoc).toHaveBeenCalledWith(expect.any(Object), {
+    await waitFor(() => expect(mockCollection).toHaveBeenCalledWith('products'));
+    await waitFor(() => expect(addDoc).toHaveBeenCalledTimes(1));
+    await waitFor(() =>
+      expect(addDoc).toHaveBeenCalledWith(expect.any(Object), {
         title: 'Test Product',
-        price: 10.00,
+        price: 10,
         description: 'Test Description',
         category: 'Test Category',
         image: 'http://example.com/image.jpg',
         stock: 50,
         rating: { rate: 4.5, count: 100 },
-      });
-      expect(mockNavigate).toHaveBeenCalledWith('/');
-    });
+      })
+    );
+    expect(mockNavigate).toHaveBeenCalledWith('/');
   });
 
   test('shows error alert on submission failure', async () => {
-    const mockAddDoc = jest.fn().mockRejectedValueOnce(new Error('Failed to add product'));
-    const mockCollection = jest.fn(() => ({ add: mockAddDoc }));
     const mockNavigate = jest.fn();
-    jest.mock('react-router-dom', () => ({
-      ...jest.requireActual('react-router-dom'),
-      useNavigate: () => mockNavigate,
+    const mockCollection = jest.fn();
+    jest.mock('firebase/firestore', () => ({
+      addDoc: jest.fn().mockRejectedValueOnce(new Error('Failed to add product')),
+      getFirestore: jest.fn(() => ({
+        collection: mockCollection,
+      })),
     }));
+
     render(
       <BrowserRouter>
         <AddProductForm />
@@ -122,12 +139,12 @@ describe('AddProductForm Component', () => {
     fireEvent.change(screen.getByLabelText(/Rating Rate:/i), { target: { value: '1.0' } });
     fireEvent.change(screen.getByLabelText(/Rating Count:/i), { target: { value: '1' } });
 
-    fireEvent.click(screen.getByRole('button', { name: /Add Product/i }));
+    const addProductBtn = screen.getByRole('button', { name: /Add Product/i });
+    fireEvent.click(addProductBtn);
 
-    await waitFor(() => {
-      expect(mockAddDoc).toHaveBeenCalledTimes(1);
-      expect(global.alert).toHaveBeenCalledWith('Error adding product: Failed to add product');
-      expect(mockNavigate).not.toHaveBeenCalled();
-    });
+    await waitFor(() => expect(mockCollection).toHaveBeenCalledWith('products'));
+    await waitFor(() => expect(addDoc).toHaveBeenCalledTimes(1));
+    expect(window.alert).toHaveBeenCalledWith('Error adding product: Failed to add product');
+    expect(mockNavigate).not.toHaveBeenCalled();
   });
 });
