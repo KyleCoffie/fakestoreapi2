@@ -8,7 +8,7 @@ import '@testing-library/jest-dom';
 // Mock the necessary Firebase and React Router hooks
 jest.mock('firebase/auth', () => ({
   getAuth: jest.fn(),
-  signOut: jest.fn(),
+  signOut: jest.fn(() => Promise.resolve()),
 }));
 
 jest.mock('react-router-dom', () => ({

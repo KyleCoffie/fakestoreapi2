@@ -20,7 +20,7 @@ const Logout: React.FC<LogoutProps> = ({ className }) => {
       await signOut(auth);
       console.log("User logged out");
       navigate('/login');
-    } catch (error) {
+    } catch (error:any) {
       setError("Logout failed. Please try again.");
       console.error("Logout error:", error);
     } finally {
