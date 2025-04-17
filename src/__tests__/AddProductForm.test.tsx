@@ -54,7 +54,7 @@ describe('AddProductForm Component', () => {
     expect(screen.getByLabelText(/Image URL:/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/Stock:/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/Rating Rate:/i)).toBeInTheDocument();
-    expect(screen.getByLabelText(/Rating Count:/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/Count:/i)).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /Add Product/i })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /Cancel/i })).toBeInTheDocument();
   });
@@ -89,7 +89,7 @@ describe('AddProductForm Component', () => {
     fireEvent.change(screen.getByLabelText(/Image URL:/i), { target: { value: 'http://example.com/image.jpg' } });
     fireEvent.change(screen.getByLabelText(/Stock:/i), { target: { value: '50' } });
     fireEvent.change(screen.getByLabelText(/Rating Rate:/i), { target: { value: '4.5' } });
-    fireEvent.change(screen.getByLabelText(/Rating Count:/i), { target: { value: '100' } });
+    fireEvent.change(screen.getByLabelText(/Count:/i), { target: { value: '100' } });
 
     const addProductBtn = screen.getByRole('button', { name: /Add Product/i });
     fireEvent.click(addProductBtn);
@@ -119,7 +119,7 @@ test('shows error alert on submission failure', async () => {
     fireEvent.change(screen.getByLabelText(/Image URL:/i), { target: { value: 'fail.jpg' } });
     fireEvent.change(screen.getByLabelText(/Stock:/i), { target: { value: '1' } });
     fireEvent.change(screen.getByLabelText(/Rating Rate:/i), { target: { value: '1.0' } });
-    fireEvent.change(screen.getByLabelText(/Rating Count:/i), { target: { value: '1' } });
+    fireEvent.change(screen.getByLabelText(/Count:/i), { target: { value: '1' } });
 
     const addProductBtn = screen.getByRole('button', { name: /Add Product/i });
     fireEvent.click(addProductBtn);

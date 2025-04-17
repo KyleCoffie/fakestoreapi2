@@ -85,7 +85,7 @@ const AddProductForm:React.FC = () => {
           <input type="number" value={ratingRate} onChange={(e) => setRatingRate(e.target.value)} required />
         </label>
         <label>
-          Rating Count:
+          Count:
           <input type="number" value={ratingCount} onChange={(e) => setRatingCount(e.target.value)} required />
         </label>
         {/* Submit button to add the product */}
