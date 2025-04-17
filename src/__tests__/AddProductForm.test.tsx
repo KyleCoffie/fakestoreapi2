@@ -113,7 +113,6 @@ test('shows error alert on submission failure', async () => {
 
     // Simulate form submission with test data
     fireEvent.change(screen.getByLabelText(/Title:/i), { target: { value: 'Fail Product' } });
-    fireEvent.change(screen.getByLabelText(/Title:/i), { target: { value: 'Fail Product' } });
     fireEvent.change(screen.getByLabelText(/Price:/i), { target: { value: '1.00' } });
     fireEvent.change(screen.getByLabelText(/Description:/i), { target: { value: 'Fail Desc' } });
     fireEvent.change(screen.getByLabelText(/Category:/i), { target: { value: 'Fail Cat' } });
