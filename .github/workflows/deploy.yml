@@ -43,7 +43,7 @@ jobs:
 
       - name: Deploy to Vercel
         run: 
-          npm install -g vercel --omit=dev --yes --token ${{ secrets.VERCEL_TOKEN }}
+          npm install -g vercel --prod --yes --token ${{ secrets.VERCEL_TOKEN }}
 
 
 
