@@ -1,5 +1,5 @@
 import { db } from '../firebasConfig';
-import { collection, addDoc, getDocs, doc, deleteDoc, query, where } from 'firebase/firestore';
+import { collection, addDoc, getDocs, } from 'firebase/firestore';
 
 interface Product {
   docId: string;
@@ -33,9 +33,9 @@ export const populateFirestore = async () => {
   const existingProducts = await getDocs(productsCollection);
 
   if (existingProducts.empty) {
-    products.forEach(async (product: any) => {
+    await Promise.all(products.map(async (product: any) => {
       await addDoc(productsCollection, { ...product });
-    });
+    }));
     alert('Firestore populated!');
   } else {
     alert('Firestore already populated!');
@@ -72,16 +72,12 @@ export const fetchCategories = async () => {
   return response.json();
 };
 
-// Function to fetch products by category from Firestore
+// Function to fetch products by category from Fake Store API
 export const fetchProductsByCategory = async (category: string): Promise<Product[]> => {
-  const productsCollection = collection(db, 'products');
-  const q = query(
-    productsCollection,
-    where('category', '==', category)
-  );
-  const snapshot = await getDocs(q);
-  return snapshot.docs.map(doc => {
-    const data = doc.data();
-    return mapProductData(data, doc.id);
-  });
+  const response = await fetch(`https://fakestoreapi.com/products/category/${category}`);
+  if (!response.ok) throw new Error('Failed to fetch Products');
+  return response.json();
 };
+
+
+

@@ -1,8 +1,18 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useDispatch } from 'react-redux';
 import { addItem } from '../store/cartSlice';
 import './Home.css';
+import StarRatings from 'react-star-ratings';
+import { auth } from '../firebasConfig';
+import { useAuthState } from 'react-firebase-hooks/auth';
+import { Link } from 'react-router-dom';
+import ShoppingCart from './ShoppingCart';
+import Logout from './Logout';
+import { deleteDoc, doc } from 'firebase/firestore';
+import { db } from '../firebasConfig';
+import { fetchProducts, fetchCategories, populateFirestore, fetchProductsByCategory } from '../services/productService';
+import { CartItem } from '../store/types';
 
 // Define the Product type
 interface Product {
@@ -17,41 +27,49 @@ interface Product {
     count: number;
   };
 }
-import StarRatings from 'react-star-ratings';
-import { auth } from '../firebasConfig';
-import { useAuthState } from 'react-firebase-hooks/auth';
-import { Link } from 'react-router-dom';
-import ShoppingCart from './ShoppingCart';
-import Logout from './Logout';
-import { deleteDoc, doc } from 'firebase/firestore';
-import { db } from '../firebasConfig';
-import { fetchProducts, fetchCategories, populateFirestore, fetchProductsByCategory } from '../services/productService';
-
 // Home component: displays a list of products and allows filtering by category
 const Home = () => {
+  // User authentication state
   const [user, loading, error] = useAuthState(auth);
-  const { data: categories, error: categoriesError, isLoading: categoriesLoading } = useQuery({ queryKey: ['categories'], queryFn: fetchCategories });
+
+  // Fetch categories
+  const {
+    data: categories,
+    error: categoriesError,
+    isLoading: categoriesLoading,
+  } = useQuery({
+    queryKey: ['categories'],
+    queryFn: fetchCategories,
+  });
+
+  // Local state to store selected category
   const [selectedCategory, setSelectedCategory] = useState('');
-  const { data: categoryProducts, error: categoryProductsError, isLoading: categoryProductsLoading } = useQuery({
+
+  // Query to fetch products matching the selected category
+  const {
+    data: categoryProducts,
+    error: categoryProductsError,
+    isLoading: categoryProductsLoading,
+  } = useQuery({
     queryKey: ['categoryProducts', selectedCategory],
     queryFn: () => fetchProductsByCategory(selectedCategory),
     enabled: !!selectedCategory,
   });
-  const [products, setProducts] = useState<Product[]>([]);
+
+  // Query to fetch all products (from Firestore or Fake Store API)
+  const {
+    data: products,
+    error: productsError,
+    isLoading: productsLoading,
+    refetch: refetchProducts,
+  } = useQuery({
+    queryKey: ['products', user],
+    queryFn: () => fetchProducts(user),
+    staleTime: 1000 * 60 * 5, // 5 minutes
+    enabled: true, 
+  });
+
   const dispatch = useDispatch();
-
-  useEffect(() => {
-    const fetchProductsData = async () => {
-      try {
-        const productsData = await fetchProducts(user);
-        setProducts(productsData);
-      } catch (error: any) {
-        console.error("Error fetching products:", error);
-      }
-    };
-
-    fetchProductsData();
-  }, [user]);
 
   if (categoriesLoading || categoryProductsLoading || loading) return <div>Loading...</div>;
   if (categoriesError || categoryProductsError || error) return <div>Error: {categoriesError?.message || categoryProductsError?.message || error?.message}</div>;
@@ -64,8 +82,9 @@ const Home = () => {
         const productDoc = doc(db, 'products', docId);
         await deleteDoc(productDoc);
         alert("Product deleted successfully!");
-      } catch (error: any) {
-        alert(`Error deleting product: ${error.message}`);
+        await refetchProducts();
+      } catch (delError: any) {
+        alert(`Error deleting product: ${delError.message}`);
       }
     }
   };
@@ -84,6 +103,10 @@ const Home = () => {
       <div className="products-container">
         {productsToDisplay?.map((product) => {
           const { docId, id, image, title, price, description, rating } = product;
+          function dispatch(arg0: { payload: CartItem; type: "cart/addItem"; }): void {
+            throw new Error('Function not implemented.');
+          }
+
           return (
             <div key={docId} className="product-card">
               <img src={image} alt={title} className="product-image" />
