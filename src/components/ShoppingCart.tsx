@@ -6,7 +6,6 @@ import { collection, addDoc, serverTimestamp } from 'firebase/firestore'; // Imp
 import { useAuthState } from 'react-firebase-hooks/auth'; // Import useAuthState hook
 import { Link } from 'react-router-dom'; // Import the Link component for navigation
 import './Home.css';
-import { CartState,CartItem } from '../store/types';
 import { RootState } from '../store/store';
 
 const ShoppingCart = () => {
@@ -26,7 +25,9 @@ const ShoppingCart = () => {
 
   // Function to update the quantity of an item in the cart
   const handleUpdateQuantity = (id: number, quantity: number) => {
-    dispatch(updateItemQuantity({ id, quantity }));
+    if (quantity >= 0) {
+      dispatch(updateItemQuantity({ id, quantity }));
+    }
   };
 
   // Function to calculate the total price of the items in the cart
@@ -97,11 +98,25 @@ const ShoppingCart = () => {
               <button
                 className='place-order-button'
                 onClick={async () => {
+                  if (!user) {
+                    alert("Please login to place an order.");
+                    return;
+                  }
+
                   const totalPrice = cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
+
+                  // Transform cart items to a serializable format
+                  const orderItems = cartItems.map(item => ({
+                    id: item.id,
+                    title: item.title,
+                    price: item.price,
+                    image: item.image,
+                    quantity: item.quantity,
+                  }));
 
                   const orderData = {
                     userId: user.uid,
-                    items: cartItems,
+                    items: orderItems, // Use the transformed orderItems
                     totalPrice: totalPrice,
                     createdAt: serverTimestamp(),
                   };

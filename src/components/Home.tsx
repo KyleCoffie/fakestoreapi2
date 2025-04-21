@@ -103,9 +103,6 @@ const Home = () => {
       <div className="products-container">
         {productsToDisplay?.map((product) => {
           const { docId, id, image, title, price, description, rating } = product;
-          function dispatch(arg0: { payload: CartItem; type: "cart/addItem"; }): void {
-            throw new Error('Function not implemented.');
-          }
 
           return (
             <div key={docId} className="product-card">
