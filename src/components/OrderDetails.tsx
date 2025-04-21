@@ -3,6 +3,7 @@ import { db } from '../firebasConfig';
 import { doc, getDoc } from 'firebase/firestore';
 import { useParams } from 'react-router-dom';
 import { Link } from 'react-router-dom';
+import '/src/components/OrderHistory.css';
 
 const OrderDetails = () => {
     // Extracts the order ID from the URL parameters
@@ -43,7 +44,7 @@ const OrderDetails = () => {
     }
 
     return (
-        <div>
+        <div className='orderhistory-form-container'>
             <h1>Order Details</h1>
             <p>Order ID: {order.id}</p>
             <p>Date: {order.createdAt?.toDate().toLocaleDateString()}</p> {/* Formats order date */}

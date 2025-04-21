@@ -142,6 +142,9 @@ const UserProfile: React.FC = () => {
       <div>
         <p><strong>Email:</strong> {profileData.email}</p>
         <p><strong>Joined:</strong> {profileData.createdAt?.toDate().toLocaleDateString()}</p>
+        <p><strong>Display Name:</strong> {profileData.displayName}</p>
+        <p><strong>Address:</strong> {profileData.address}</p>
+        <p><strong>Phone Number:</strong> {profileData.phoneNumber}</p>
       </div>
 
         <h3>Update Profile</h3>

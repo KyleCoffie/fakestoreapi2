@@ -52,10 +52,6 @@ const renderWithStore = (ui: React.ReactElement, preloadedState: CartItem[] = []
     </Provider>
   );
 };
-
-// (global as any).TextEncoder = require('util').TextEncoder; // Removed this line as it's now at the top
-// (global as any).TextDecoder = require('util').TextDecoder; // Removed this line as it's now at the top
-
 test('removes item on button click', async () => {
   const { getByText, queryByText, getByRole } = renderWithStore(
     <ShoppingCart />,
