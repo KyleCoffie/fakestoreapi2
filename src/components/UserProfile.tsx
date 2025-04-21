@@ -32,12 +32,12 @@ const UserProfile: React.FC = () => {
 
   const { data: user, isLoading: isUserLoading, error: userError } = useQuery({
     queryKey: ['user'],
-    queryFn: fetchUser,
+    queryFn: fetchUser, // specify function responsible for retrieving user data
   });
 
-  const fetchUserProfile = async (userId: string) => {
-    const userDocRef = doc(db, 'users', userId);
-    const docSnap = await getDoc(userDocRef);
+  const fetchUserProfile = async (userId: string) => {// fetch user profile data directly from firestore
+    const userDocRef = doc(db, 'users', userId); //Creates a reference to the user's document inside the users collection.
+    const docSnap = await getDoc(userDocRef); //Retrieves the document snapshot from Firestore.
     if (docSnap.exists()) {
       return docSnap.data() as UserProfileData;
     } else {
@@ -60,7 +60,7 @@ const UserProfile: React.FC = () => {
   };
 
   const { mutate: updateMutate, status: updateStatus } = useMutation({
-    mutationFn: updateUserProfile,
+    mutationFn: updateUserProfile,// define function for updating the user profile in database
     onSuccess: () => {
       // Invalidate and refetch
       queryClient.invalidateQueries({ queryKey: ['userProfile', user?.uid] });
@@ -132,11 +132,10 @@ const UserProfile: React.FC = () => {
     return <div>Error loading profile data or user not found.</div>;
   }
 
-  // --- Main JSX ---
+  // --- Main TSX ---
   return (
     <div className='profile-form-container'>
       <h2>User Profile</h2>
-      {/* Omit error display here as it's already handled above */}
       <div>
         <p><strong>Email:</strong> {profileData.email}</p>
         <p><strong>Joined:</strong> {profileData.createdAt?.toDate().toLocaleDateString()}</p>
