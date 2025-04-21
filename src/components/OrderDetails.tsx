@@ -51,14 +51,14 @@ const OrderDetails = () => {
             <p>Total: ${order.totalPrice?.toFixed(2)}</p> {/* Formats total price */}
 
             <h2>Items:</h2>
-            <ul>
+            <ol>
                 {/* Maps over the order items and displays them */}
                 {order.items.map((item: any) => (
                     <li key={item.id}>
                         {item.title} - Quantity: {item.quantity} - Price: ${item.price}
                     </li>
                 ))}
-            </ul>
+            </ol>
 
             {/* Button to navigate back to the products page */}
             <Link to="/">
