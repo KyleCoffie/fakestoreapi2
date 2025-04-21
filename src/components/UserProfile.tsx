@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { auth, db } from '../firebasConfig';
 import { doc, getDoc, updateDoc, deleteDoc, Timestamp } from 'firebase/firestore';
 import { onAuthStateChanged, User, deleteUser } from 'firebase/auth';
@@ -18,8 +18,6 @@ const UserProfile: React.FC = () => {
   const [displayNameInput, setDisplayNameInput] = useState('');
   const [addressInput, setAddressInput] = useState('');
   const [phoneNumberInput, setPhoneNumberInput] = useState('');
-  const [isUpdating, setIsUpdating] = useState<boolean>(false);
-
   const queryClient = useQueryClient();
 
   // Fetch the current user using onAuthStateChanged
