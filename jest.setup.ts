@@ -1,4 +1,6 @@
 import { TextEncoder, TextDecoder } from 'util';
+import dotenv from "dotenv";
+dotenv.config();
 
 // @ts-ignore
 if (typeof global.TextEncoder === 'undefined') {

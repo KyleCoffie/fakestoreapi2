@@ -7,7 +7,8 @@
       "allowSyntheticDefaultImports": true,
       "strict": true,
       "moduleResolution": "node",
-      "skipLibCheck": true
+      "skipLibCheck": true,
+      "allowJs": true
     },
     "include": ["src/**/*","vite-env.d.ts"],
     "exclude": ["node_modules", "dist"]
