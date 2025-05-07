@@ -16,7 +16,7 @@ jest.mock('firebase/firestore', () => ({
 }));
 
 // Mock the db object from firebasConfig to return a mock Firestore instance.  This is crucial for the collection function to work correctly.
-jest.mock('../../firebasConfig.mjs', () => ({
+jest.mock('../../firebaseConfig.mjs', () => ({
   db: {
     collection: jest.fn(() => ({})), // Mock Firestore instance with collection method
   },
