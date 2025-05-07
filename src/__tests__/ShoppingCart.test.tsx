@@ -9,7 +9,6 @@ import '@testing-library/jest-dom';
 import ShoppingCart from '../components/ShoppingCart';
 import { Provider } from 'react-redux';
 import { configureStore, createSlice } from '@reduxjs/toolkit';
-import { removeItem } from '../store/cartSlice';
 import { MemoryRouter } from 'react-router-dom'; // Import MemoryRouter
 
 // Define the structure of the Cart Item
@@ -53,7 +52,7 @@ const renderWithStore = (ui: React.ReactElement, preloadedState: CartItem[] = []
   );
 };
 test('removes item on button click', async () => {
-  const { getByText, queryByText, getByRole } = renderWithStore(
+  const { getByText, queryByText } = renderWithStore(
     <ShoppingCart />,
     [{ id: 1, title: 'Test Item', price: 10, quantity: 1 }]
   );
