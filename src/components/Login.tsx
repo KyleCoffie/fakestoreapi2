@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 // Import Firebase authentication and Firestore utilities
-import { auth } from '../firebasConfig';
+import { auth } from '../firebasConfig.mjs';
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { Link } from 'react-router-dom';
 import './Login.css'; 

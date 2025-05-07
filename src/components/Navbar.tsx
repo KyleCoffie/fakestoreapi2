@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useAuthState } from 'react-firebase-hooks/auth';
-import { auth } from '../firebasConfig';
+import { auth } from '../firebasConfig.mjs';
 import Logout from './Logout';
 import '/src/App.css';
 

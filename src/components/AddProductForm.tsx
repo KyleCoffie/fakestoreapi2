@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 // Import Firestore and Firebase utilities for data handling
-import { db } from '../firebasConfig';
+import { db } from '../firebasConfig.mjs';
 import { collection, addDoc } from 'firebase/firestore';
 import { useNavigate, Link } from 'react-router-dom';
 import './ProductForm.css'; // Import the stylesheet for form styling

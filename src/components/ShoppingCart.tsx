@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { removeItem, updateItemQuantity, clearCart } from '../store/cartSlice';
-import { db, auth } from '../firebasConfig'; // Import Firebase
+import { db, auth } from '../firebasConfig.mjs'; // Import Firebase
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore'; // Import Firestore functions
 import { useAuthState } from 'react-firebase-hooks/auth'; // Import useAuthState hook
 import { Link } from 'react-router-dom'; // Import the Link component for navigation

@@ -1,4 +1,4 @@
-import { db } from '../firebasConfig';
+import { db } from '../firebasConfig.mjs';
 import { collection, addDoc, getDocs, } from 'firebase/firestore';
 
 interface Product {

@@ -16,7 +16,7 @@ import Navbar from './components/Navbar'; // Import Navbar component
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { useAuthState } from 'react-firebase-hooks/auth';
-import { auth } from './firebasConfig';
+import { auth } from './firebasConfig.mjs';
 import './App.css';
 
 
