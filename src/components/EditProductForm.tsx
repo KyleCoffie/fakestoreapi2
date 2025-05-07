@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 // Import Firebase Firestore functions and utilities
-import { db } from '../firebasConfig.mjs';
+import { db } from '../../firebaseConfig.mjs/index.js';
 import { collection, doc, getDoc, updateDoc } from 'firebase/firestore';
 import { useNavigate, useParams, Link } from 'react-router-dom';
 import './ProductForm.css'; 

@@ -4,13 +4,13 @@ import { useDispatch } from 'react-redux';
 import { addItem } from '../store/cartSlice';
 import './Home.css';
 import StarRatings from 'react-star-ratings';
-import { auth } from '../firebasConfig.mjs';
+import { auth } from '../../firebaseConfig.mjs/index.js';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { Link } from 'react-router-dom';
 import ShoppingCart from './ShoppingCart';
 import Logout from './Logout';
 import { deleteDoc, doc } from 'firebase/firestore';
-import { db } from '../firebasConfig.mjs';
+import { db } from '../../firebaseConfig.mjs/index.js';
 import { fetchProducts, fetchCategories, populateFirestore, fetchProductsByCategory } from '../services/productService';
 import { CartItem } from '../store/types';
 

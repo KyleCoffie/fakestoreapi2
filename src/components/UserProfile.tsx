@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { auth, db } from '../firebasConfig.mjs';
+import { auth, db } from '../../firebaseConfig.mjs';
 import { doc, getDoc, updateDoc, deleteDoc, Timestamp } from 'firebase/firestore';
 import { onAuthStateChanged, User, deleteUser } from 'firebase/auth';
 import { Link } from 'react-router-dom';

@@ -6,9 +6,11 @@ module.exports = {
     moduleNameMapper: {
       '\\.(css|less|scss|sass)$': 'identity-obj-proxy',
     },
-    transform: {
-        '^.+\\.(js|jsx|ts|tsx)$': 'babel-jest',
-      },
-      
+    "transform": {
+        "^.+\\.m?[jt]sx?$": "jest-esm-transformer"
+      }
+    ,
+    
+      "extensionsToTreatAsEsm": [".ts", ".js",".mjs"]
 };
    

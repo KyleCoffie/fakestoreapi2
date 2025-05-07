@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
 // Import Firebase authentication and Firestore utilities
-import { auth } from '../firebasConfig.mjs';
+import { auth, db } from '../../firebaseConfig.mjs';
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { doc, setDoc, serverTimestamp } from "firebase/firestore";
-import { db } from "../firebasConfig.mjs";
 
 // Define the Register component
 const Register: React.FC = () => {

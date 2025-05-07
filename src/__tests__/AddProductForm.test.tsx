@@ -4,7 +4,7 @@ import '@testing-library/jest-dom';
 import { BrowserRouter, Link } from 'react-router-dom';
 import AddProductForm from '../components/AddProductForm';
 import { collection, addDoc } from 'firebase/firestore';
-import { db } from '../firebasConfig.mjs';
+import { db } from '../../firebaseConfig.mjs/index.js';
 import { useNavigate } from 'react-router-dom';
 
 // Mock the firebase/firestore module to provide mocked functions
