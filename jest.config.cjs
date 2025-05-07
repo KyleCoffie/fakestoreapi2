@@ -6,7 +6,6 @@ module.exports = {
     moduleNameMapper: {
       '\\.(css|less|scss|sass)$': 'identity-obj-proxy',
     },
-    extensionsToTreatAsEsm: ['.ts', '.mjs'],
     transformIgnorePatterns: [ '/node\_modules/(?!(@?firebase)/)'],
 
 
