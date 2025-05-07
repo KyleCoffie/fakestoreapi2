@@ -11,6 +11,6 @@ module.exports = {
       }
     ,
     
-      "extensionsToTreatAsEsm": [".ts", ".js",".mjs"]
+      "extensionsToTreatAsEsm": [".ts",".mjs"]
 };
    
